@@ -1,4 +1,4 @@
-log_dir: "Models/VCTK20"
+log_dir: "Models/DeepMine"
 save_freq: 2
 device: "cuda"
 epochs: 150
@@ -15,7 +15,7 @@ ASR_config: "Utils/ASR/config.yml"
 ASR_path: "Utils/ASR/epoch_00100.pth"
 
 preprocess_params:
-  sr: 24000
+  sr: 22050
   spect_params:
     n_fft: 2048
     win_length: 1200
