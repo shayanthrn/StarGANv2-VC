@@ -38,7 +38,7 @@ def save_chunks(chunks, directory):
 
     target_length = 5 * 1000
     output_chunks = [chunks[0]]
-    counter = 0
+    lencounter = 0
     for chunk in chunks[1:]:
         if len(output_chunks[-1]) < target_length:
             output_chunks[-1] += chunk
@@ -46,8 +46,8 @@ def save_chunks(chunks, directory):
             # if the last output chunk is longer than the target length,
             # we can start a new one
             output_chunks.append(chunk)
-        counter+=1
-        if(counter>120):
+        lencounter+=1
+        if(lencounter>120):
             break
 
     for chunk in output_chunks:
