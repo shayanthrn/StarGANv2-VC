@@ -4,8 +4,6 @@ __DSPATH__ = "./DeepMine"
 # output path
 __OUTPATH__ = "./Data"
 
-__RAWDSPATH__ = "/home/shayanthrn/Desktop/wav/"
-
 import os
 from scipy.io import wavfile
 from pydub import AudioSegment
@@ -53,27 +51,30 @@ def save_chunks(chunks, directory):
         counter = counter + 1
         chunk.export(os.path.join(directory, str(counter) + '.wav'), format="wav")
 
+rawdspath = input("please enter full path of dataset (e.g : /home/drzeinali/Desktop/wav/")
 
+file2speaker = open("file2speaker.lst")
+lines = file2speaker.readlines()
+file2speakerDic = {}
 
-# file2speaker = open("file2speaker.lst")
-# lines = file2speaker.readlines()
-# file2speakerDic = {}
+for line in lines:
+    data = line.strip().split(' ')
+    file2speakerDic[data[0]]= data[1]
 
-# for line in lines:
-#     data = line.strip().split(' ')
-#     file2speakerDic[data[0]]= data[1]
+if not os.path.exists(__DSPATH__):    
+    os.makedirs(__DSPATH__)
+if not os.path.exists(__OUTPATH__):
+    os.makedirs(__OUTPATH__)    
 
-# if not os.path.exists(__DSPATH__):    
-#     os.makedirs(__DSPATH__)
-# filelist = os.listdir(__RAWDSPATH__)
-# for file in filelist:
-#     fileid = file.split('.')[0]
-#     speakerid = file2speakerDic[fileid]
-#     src = __RAWDSPATH__ + file
-#     path = __DSPATH__+ '/p' +speakerid
-#     if(not os.path.exists(path)):
-#         os.makedirs(path)
-#     shutil.copy(src, path)
+filelist = os.listdir(rawdspath)
+for file in filelist:
+    fileid = file.split('.')[0]
+    speakerid = file2speakerDic[fileid]
+    src = rawdspath + file
+    path = __DSPATH__+ '/p' +speakerid
+    if(not os.path.exists(path)):
+        os.makedirs(path)
+    shutil.copy(src, path)
 
 
 speakers = ['001','002','003','004','005','006','007','008','009','010']
