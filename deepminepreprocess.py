@@ -46,7 +46,7 @@ def save_chunks(chunks, directory):
             # if the last output chunk is longer than the target length,
             # we can start a new one
             output_chunks.append(chunk)
-        lencounter+=1
+            lencounter+=1
         if(lencounter>120):
             break
 
