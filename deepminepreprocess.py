@@ -92,11 +92,10 @@ data_list = []
 for path, subdirs, files in os.walk(__OUTPATH__):
     for name in files:
         if name.endswith(".wav"):
-            speaker = int(path.split('/')[-1].replace('p', ''))
+            speaker = path.split('/')[-1].replace('p', '')
             if speaker in speakers:
                 data_list.append({"Path": os.path.join(path, name), "Speaker": int(speakers.index(speaker)) + 1})
                 
-
 
 data_list = pd.DataFrame(data_list)
 data_list = data_list.sample(frac=1)
