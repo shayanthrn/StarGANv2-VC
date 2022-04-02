@@ -1,6 +1,38 @@
 # -*- coding: utf-8 -*-
 
 import os
+import subprocess
+import logging
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
+
+_cuda_command = 'nvidia-smi -q | grep "Minor\|Processes" | grep "None" -B1 | tr -d " " | cut -d ":" -f2 | grep -v "None" | tail -1'
+
+
+def set_cuda_visible_devices(use_gpu=True, logger=None):
+    try:
+        if use_gpu:
+            free_gpu = subprocess.check_output(_cuda_command, shell=True)
+            if len(free_gpu) == 0:
+                if logger is not None:
+                    logger.info("No GPU seems to be available and I cannot continue without GPU.")
+                raise Exception("No GPU seems to be available and I cannot continue without GPU.")
+            else:
+                os.environ["CUDA_VISIBLE_DEVICES"] = free_gpu.decode().strip()
+            if logger is not None:
+                logger.info("CUDA_VISIBLE_DEVICES " + os.environ["CUDA_VISIBLE_DEVICES"])
+        else:
+            os.environ["CUDA_VISIBLE_DEVICES"] = ''
+    except subprocess.CalledProcessError:
+        if logger is not None:
+            logger.info("No GPU seems to be available and I cannot continue without GPU.")
+        os.environ["CUDA_VISIBLE_DEVICES"] = ''
+        if use_gpu:
+            raise
+
+if 'gpu' in os.uname()[1]:
+    set_cuda_visible_devices(use_gpu=True, logger=logger)
+
 import os.path as osp
 import sys
 import time
@@ -14,9 +46,9 @@ from tqdm import tqdm
 
 from losses import compute_d_loss, compute_g_loss
 
-import logging
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.DEBUG)
+
+
+
 
 class Trainer(object):
     def __init__(self,
